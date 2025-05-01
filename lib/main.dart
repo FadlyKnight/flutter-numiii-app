@@ -30,6 +30,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   String _searchQuery = '';
+  // Add a state variable to store the selected category
+  String _selectedCategory = '';
 
   // Controller untuk EditText/TextField
   final TextEditingController _searchController = TextEditingController();
@@ -51,6 +53,14 @@ class _HomePageState extends State<HomePage> {
       _searchQuery = text;
     });
     print('Searching for: $_searchQuery');
+  }
+
+  // Add a method to update the selected category
+  void _updateSelectedCategory(String category) {
+    setState(() {
+      _selectedCategory = category;
+    });
+    print('Selected category: $_selectedCategory');
   }
 
   @override
@@ -134,97 +144,45 @@ class _HomePageState extends State<HomePage> {
                 height: 120,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: const [
+                  children: [
                     PokemonCategory(
                       icon: Icons.local_fire_department,
                       color: Colors.redAccent,
                       text: 'Api',
+                      type: 'fire',
+                      onCategorySelected: _updateSelectedCategory,
                     ),
                     PokemonCategory(
                       icon: Icons.water_drop,
                       color: Colors.blueAccent,
                       text: 'Air',
+                      type: 'water',
+                      onCategorySelected: _updateSelectedCategory,
                     ),
                     PokemonCategory(
                       icon: Icons.bolt,
                       color: Colors.yellowAccent,
                       text: 'Listrik',
+                      type: 'electric',
+                      onCategorySelected: _updateSelectedCategory,
                     ),
                     PokemonCategory(
                       icon: Icons.grass,
                       color: Colors.greenAccent,
                       text: 'Rumput',
+                      type: 'grass',
+                      onCategorySelected: _updateSelectedCategory,
                     ),
                     PokemonCategory(
                       icon: Icons.psychology,
                       color: Colors.purpleAccent,
                       text: 'Psikis',
+                      type: 'psychic',
+                      onCategorySelected: _updateSelectedCategory,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-
-              // Pokemon Populer
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Pokemon Populer',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  // Widget Flutter (Basic: Button)
-                  TextButton(
-                    onPressed: () {
-                      // Navigasi ke halaman semua Pokemon
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Melihat semua Pokemon')),
-                      );
-                    },
-                    child: const Text('Lihat Semua'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.8,
-                children: const [
-                  PokemonItem(
-                    name: 'Pikachu',
-                    price: 'Rp 250.000',
-                    imageUrl: 'https://fakeimg.pl/150?text=Pikachu',
-                    rating: '4.8',
-                    type: 'Listrik',
-                  ),
-                  PokemonItem(
-                    name: 'Charizard',
-                    price: 'Rp 500.000',
-                    imageUrl: 'https://fakeimg.pl/150?text=Charizard',
-                    rating: '4.9',
-                    type: 'Api/Terbang',
-                  ),
-                  PokemonItem(
-                    name: 'Bulbasaur',
-                    price: 'Rp 220.000',
-                    imageUrl: 'https://fakeimg.pl/150?text=Bulbasaur',
-                    rating: '4.5',
-                    type: 'Rumput/Racun',
-                  ),
-                  PokemonItem(
-                    name: 'Squirtle',
-                    price: 'Rp 220.000',
-                    imageUrl: 'https://fakeimg.pl/150?text=Squirtle',
-                    rating: '4.6',
-                    type: 'Air',
-                  ),
-                ],
-              ),
-
               const SizedBox(height: 20),
 
               // Featured Pokemon - Contoh StatefulWidget lain
@@ -233,7 +191,8 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              const FeaturedPokemon(),
+              // Pass the selected category to FeaturedPokemon
+              FeaturedPokemon(selectedCategory: _selectedCategory),
             ],
           ),
         ),
@@ -258,12 +217,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Contoh StatelessWidget
-class PokemonCategory extends StatelessWidget {
+// Widget Flutter (State: Stateful)
+class PokemonCategory extends StatefulWidget {
   final IconData icon;
   final Color color;
   final String text;
   final String? type;
+  // Add callback function to pass the selected category back
+  final Function(String) onCategorySelected;
 
   const PokemonCategory({
     Key? key,
@@ -271,7 +232,24 @@ class PokemonCategory extends StatelessWidget {
     required this.color,
     required this.text,
     this.type,
+    required this.onCategorySelected,
   }) : super(key: key);
+
+  @override
+  State<PokemonCategory> createState() => _PokemonCategoryState();
+}
+
+// Contoh StatelessWidget
+class _PokemonCategoryState extends State<PokemonCategory> {
+  String _category = ''; // Kategori Pokemon yang dipilih
+
+  void _updateKategori(String? type) {
+    setState(() {
+      _category = type ?? '';
+    });
+    // Call the callback function to pass the selected category to parent
+    widget.onCategorySelected(_category);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -282,13 +260,23 @@ class PokemonCategory extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: widget.color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: color, size: 40),
+            child: IconButton(
+              onPressed: () => _updateKategori(widget.type!),
+              iconSize: 50,
+              constraints: const BoxConstraints(),
+              padding: EdgeInsets.zero,
+              icon: Icon(widget.icon, color: widget.color, size: 40),
+            ),
           ),
+
           const SizedBox(height: 8),
-          Text(text, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(
+            widget.text,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
         ],
       ),
     );
@@ -412,7 +400,11 @@ class PokemonItem extends StatelessWidget {
 
 // Contoh StatefulWidget lain - Featured Pokemon dengan counter
 class FeaturedPokemon extends StatefulWidget {
-  const FeaturedPokemon({Key? key}) : super(key: key);
+  // Add parameter to receive selected category
+  final String selectedCategory;
+
+  const FeaturedPokemon({Key? key, required this.selectedCategory})
+    : super(key: key);
 
   @override
   State<FeaturedPokemon> createState() => _FeaturedPokemonState();
@@ -475,16 +467,19 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
                   children: [
                     // Widget Flutter (Basic: Text)
                     const Text(
-                      'Mewtwo',
+                      "Mewtwo",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
                     const SizedBox(height: 5),
-                    const Text(
-                      'Psikis',
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
+                    // Display category when selected
+                    Text(
+                      widget.selectedCategory.isEmpty
+                          ? 'Psikis'
+                          : widget.selectedCategory,
+                      style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                     const SizedBox(height: 5),
                     Text(
@@ -517,6 +512,27 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 15),
+          // Display the selected category
+          widget.selectedCategory.isNotEmpty
+              ? Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5,
+                  horizontal: 10,
+                ),
+                margin: const EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  'Kategori Terpilih: ${widget.selectedCategory}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              )
+              : const SizedBox(),
           // Widget Kuantitas
           Row(
             children: [
