@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   String _searchQuery = '';
   // Add a state variable to store the selected category
-  String _selectedCategory = '';
+  Map _selectedData = {};
 
   // Controller untuk EditText/TextField
   final TextEditingController _searchController = TextEditingController();
@@ -56,11 +56,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Add a method to update the selected category
-  void _updateSelectedCategory(String category) {
+  void _updateSelectedCategory(Map selectedCategory) {
     setState(() {
-      _selectedCategory = category;
+      _selectedData = selectedCategory;
     });
-    print('Selected category: $_selectedCategory');
+    print('Selected category: $_selectedData');
   }
 
   @override
@@ -192,7 +192,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 10),
               // Pass the selected category to FeaturedPokemon
-              FeaturedPokemon(selectedCategory: _selectedCategory),
+              FeaturedPokemon(selectedData: _selectedData),
             ],
           ),
         ),
@@ -224,7 +224,7 @@ class PokemonCategory extends StatefulWidget {
   final String text;
   final String? type;
   // Add callback function to pass the selected category back
-  final Function(String) onCategorySelected;
+  final Function(Map) onCategorySelected;
 
   const PokemonCategory({
     Key? key,
@@ -241,11 +241,75 @@ class PokemonCategory extends StatefulWidget {
 
 // Contoh StatelessWidget
 class _PokemonCategoryState extends State<PokemonCategory> {
-  String _category = ''; // Kategori Pokemon yang dipilih
+  Map _category = {}; // Kategori Pokemon yang dipilih
+
+  Map pokemonData = {
+    'electric': {
+      'name': 'Raichu',
+      'price': 'Rp 500.000',
+      'imageUrl':
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png',
+      'rating': '4.8',
+      'type': 'Listrik',
+      'description':
+          'Raichu adalah Pokémon listrik cepat dengan serangan petir yang mematikan.',
+    },
+    'fire': {
+      'name': 'Charizard',
+      'price': 'Rp 2.000.000',
+      'imageUrl':
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png',
+      'rating': '4.9',
+      'type': 'Api',
+      'description':
+          'Charizard adalah naga api yang kuat, bisa terbang dan menyemburkan api panas.',
+    },
+    'grass': {
+      'name': 'Bulbasaur',
+      'price': 'Rp 800.000',
+      'imageUrl':
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
+      'rating': '4.2',
+      'type': 'Rumput',
+      'description':
+          'Bulbasaur adalah Pokémon tanaman yang lucu dan bisa menyerap energi matahari.',
+    },
+    'water': {
+      'name': 'Blastoise',
+      'price': 'Rp 900.000',
+      'imageUrl':
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png',
+      'rating': '4.3',
+      'type': 'Air',
+      'description':
+          'Blastoise punya meriam air di punggungnya dan serangan air yang dahsyat.',
+    },
+    'psychic': {
+      'name': 'Mewtwo',
+      'price': 'Rp 1.500.000',
+      'imageUrl':
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png',
+      'rating': '5.0',
+      'type': 'Psikis',
+      'description':
+          'Mewtwo adalah Pokémon psikis super kuat hasil eksperimen genetik.',
+    },
+  };
 
   void _updateKategori(String? type) {
     setState(() {
-      _category = type ?? '';
+      _category =
+          pokemonData[type] ??
+          {
+            'name': 'Raichu',
+            'price': 'Rp 500.000',
+            'imageUrl':
+                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png',
+            'rating': '4.8',
+            'type': 'Listrik',
+            'description':
+                'Raichu adalah Pokémon listrik cepat dengan serangan petir yang mematikan.',
+          };
     });
     // Call the callback function to pass the selected category to parent
     widget.onCategorySelected(_category);
@@ -401,10 +465,9 @@ class PokemonItem extends StatelessWidget {
 // Contoh StatefulWidget lain - Featured Pokemon dengan counter
 class FeaturedPokemon extends StatefulWidget {
   // Add parameter to receive selected category
-  final String selectedCategory;
+  final Map selectedData;
 
-  const FeaturedPokemon({Key? key, required this.selectedCategory})
-    : super(key: key);
+  const FeaturedPokemon({super.key, required this.selectedData});
 
   @override
   State<FeaturedPokemon> createState() => _FeaturedPokemonState();
@@ -454,7 +517,7 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  'https://fakeimg.pl/150?text=Mewtwo',
+                  widget.selectedData['imageUrl'],
                   height: 100,
                   width: 100,
                   fit: BoxFit.cover,
@@ -466,9 +529,9 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Widget Flutter (Basic: Text)
-                    const Text(
-                      "Mewtwo",
-                      style: TextStyle(
+                    Text(
+                      widget.selectedData['name'],
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
@@ -476,14 +539,12 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
                     const SizedBox(height: 5),
                     // Display category when selected
                     Text(
-                      widget.selectedCategory.isEmpty
-                          ? 'Psikis'
-                          : widget.selectedCategory,
+                      widget.selectedData['type'],
                       style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'Rp 1.500.000',
+                      widget.selectedData['price'],
                       style: TextStyle(
                         color: Colors.red[700],
                         fontWeight: FontWeight.bold,
@@ -491,13 +552,16 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.star, color: Colors.amber, size: 16),
-                        SizedBox(width: 4),
+                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                        const SizedBox(width: 4),
                         Text(
-                          '5.0',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                          widget.selectedData['rating'],
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
@@ -507,13 +571,13 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
             ],
           ),
           const SizedBox(height: 15),
-          const Text(
-            'Pokemon legenda terkuat, hasil eksperimen genetik dengan DNA MeSangat langka dan memiliki kemampuan psikis yang luar biasa.',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
+          Text(
+            widget.selectedData['description'],
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 15),
           // Display the selected category
-          widget.selectedCategory.isNotEmpty
+          widget.selectedData.isNotEmpty
               ? Container(
                 padding: const EdgeInsets.symmetric(
                   vertical: 5,
@@ -525,7 +589,7 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
-                  'Kategori Terpilih: ${widget.selectedCategory}',
+                  'Kategori Terpilih: ${widget.selectedData['type']}',
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -575,7 +639,7 @@ class _FeaturedPokemonState extends State<FeaturedPokemon> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'Mewtwo ($_quantity) ditambahkan ke keranjang',
+                        '${widget.selectedData['name']} ($_quantity) ditambahkan ke keranjang',
                       ),
                     ),
                   );
