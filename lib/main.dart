@@ -252,6 +252,7 @@ class PokemonCategory extends StatefulWidget {
 class _PokemonCategoryState extends State<PokemonCategory> {
   Map _category = {}; // Kategori Pokemon yang dipilih
 
+  // List data Pokemon dengan Key category
   Map pokemonData = {
     'electric': {
       'name': 'Raichu',
@@ -305,6 +306,7 @@ class _PokemonCategoryState extends State<PokemonCategory> {
     },
   };
 
+  // Method untuk memperbarui kategori Pokemon yang dipilih
   void _updateKategori(String? type) {
     setState(() {
       _category = pokemonData[type];
