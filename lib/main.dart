@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                   image: const DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
-                      'https://fakeimg.pl/400x150?text=Pokemon+Sale',
+                      'https://media-hosting.imagekit.io/1b5d57a4229644fa/pokemon-banner.jpg?Expires=1840987701&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=eGWEfgC63Quglf8BUGA8Ek7Nqs2VZH5h1f4PLDNxwj3jw7RycVBIuypad3VUg4NAAkSI3TWMQy8zkAn8XEwdqyuOEjpePEtS1ArHS1rSg9PdIbSSx6RgApbOl9SHlQ28HV56R4QunpSFXISd62k4kI1w~aRrw6~qpThdJW3DjXqv2tT0-20rEbMF6gK9pux8vKZdzh4mhKlGCcejUVnreKs~pfbLBT~g~SKGs8sidRTBXPNsGQDdnxdD4Ps1pFRXjSi6Tj4E62bPynT5m6nstv4XOHJgN80gKFeJ1Dob3u9Qk8Znq3HdU-wPQTj-DeepDe2TyEt54wR9OvE-xf4Ttg__',
                     ),
                   ),
                 ),
