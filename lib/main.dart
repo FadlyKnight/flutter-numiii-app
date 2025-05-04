@@ -31,7 +31,16 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   String _searchQuery = '';
   // Add a state variable to store the selected category
-  Map _selectedData = {};
+  Map _selectedData = {
+    'name': 'Raichu',
+    'price': 'Rp 500.000',
+    'imageUrl':
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png',
+    'rating': '4.8',
+    'type': 'Listrik',
+    'description':
+        'Raichu adalah Pokémon listrik cepat dengan serangan petir yang mematikan.',
+  }; // init base data
 
   // Controller untuk EditText/TextField
   final TextEditingController _searchController = TextEditingController();
@@ -298,18 +307,7 @@ class _PokemonCategoryState extends State<PokemonCategory> {
 
   void _updateKategori(String? type) {
     setState(() {
-      _category =
-          pokemonData[type] ??
-          {
-            'name': 'Raichu',
-            'price': 'Rp 500.000',
-            'imageUrl':
-                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png',
-            'rating': '4.8',
-            'type': 'Listrik',
-            'description':
-                'Raichu adalah Pokémon listrik cepat dengan serangan petir yang mematikan.',
-          };
+      _category = pokemonData[type];
     });
     // Call the callback function to pass the selected category to parent
     widget.onCategorySelected(_category);
