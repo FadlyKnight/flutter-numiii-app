@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/login.dart'; // import halaman login
-import 'pages/store.dart'; // import halaman store
+import 'layouts/base.dart'; // import halaman login
 
 void main() {
   runApp(const MyApp());
@@ -12,14 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      // home: const HomePage(), // ini root page pertama
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomePage(),
-        '/login': (context) => const LoginPage(),
-      },
+      home: const BaseLayout(), // Root-nya langsung ke layout
     );
   }
 }
