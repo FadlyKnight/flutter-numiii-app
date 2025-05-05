@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import all pages
 import '../pages/login.dart';
 import '../pages/store.dart';
 import '../pages/listSearch.dart';
@@ -14,6 +15,7 @@ class BaseLayout extends StatefulWidget {
 class _BaseLayoutState extends State<BaseLayout> {
   int _currentIndex = 0;
 
+  // List of pages to display in the body of the Scaffold
   final List<Widget> _pages = const [
     HomePage(),
     ListSearchPage(),
@@ -21,6 +23,7 @@ class _BaseLayoutState extends State<BaseLayout> {
     LoginPage(),
   ];
 
+  // function to handle tab changes
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
@@ -37,10 +40,7 @@ class _BaseLayoutState extends State<BaseLayout> {
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () {
-              // Implementasi keranjang belanja
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Keranjang Belanja Pokemon')),
-              );
+              _onTabTapped(2); // Navigate to CartPage
             },
           ),
           IconButton(
@@ -54,6 +54,11 @@ class _BaseLayoutState extends State<BaseLayout> {
           ),
         ],
       ),
+      /**
+       * IndexedStack digunakan untuk menampilkan halaman yang berbeda
+       * make sure state still live (form, scroll, controller, dsb)
+       * navigation page smooth and less rebuild
+       */
       body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
