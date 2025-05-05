@@ -1,24 +1,4 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-// Widget Flutter (State: Stateless)
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Pokemon Shop',
-      theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'Poppins'),
-      home: const HomePage(),
-    );
-  }
-}
 
 // Widget Flutter (State: Stateful)
 class HomePage extends StatefulWidget {
@@ -201,7 +181,6 @@ class PokemonCategory extends StatefulWidget {
   State<PokemonCategory> createState() => _PokemonCategoryState();
 }
 
-// Contoh StatelessWidget
 class _PokemonCategoryState extends State<PokemonCategory> {
   Map _category = {}; // Kategori Pokemon yang dipilih
 
@@ -293,121 +272,6 @@ class _PokemonCategoryState extends State<PokemonCategory> {
           Text(
             widget.text,
             style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Contoh StatelessWidget dengan Basic Widgets
-class PokemonItem extends StatelessWidget {
-  final String name;
-  final String price;
-  final String imageUrl;
-  final String rating;
-  final String type;
-
-  const PokemonItem({
-    Key? key,
-    required this.name,
-    required this.price,
-    required this.imageUrl,
-    required this.rating,
-    required this.type,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min, //
-        children: [
-          // Widget Flutter (Basic: Image)
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
-            ),
-            child: Image.network(
-              imageUrl,
-              height: 100,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  type,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  price,
-                  style: TextStyle(
-                    color: Colors.red[700],
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Row(
-                  children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      rating,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const Spacer(),
-                    // Widget Flutter (Basic: Button - IconButton)
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      icon: const Icon(
-                        Icons.add_circle,
-                        color: Colors.red,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('$name ditambahkan ke keranjang'),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
           ),
         ],
       ),
